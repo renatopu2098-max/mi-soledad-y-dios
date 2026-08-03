@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procrastinación y celular: dos males silenciosos | Mi Soledad y Dios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#001a3a;
+    --navy-mid:#002d57;
+    --navy-light:#013e78;
+    --navy-card: rgba(255,255,255,0.035);
+    --navy-card-hover: rgba(255,255,255,0.06);
+    --gold:#ffbd59;
+    --gold-soft:#ffd68f;
+    --gold-dim: rgba(255,189,89,0.35);
+    --gold-glow: rgba(255,189,89,0.18);
+    --text-primary:#eaf2ff;
+    --text-secondary:#a9c0e0;
+    --text-muted:#6c85a8;
+    --border-soft: rgba(255,255,255,0.09);
+    --border-gold: rgba(255,189,89,0.4);
+    --font-display:'Playfair Display', Georgia, serif;
+    --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, var(--navy-light) 0%, transparent 55%),
+      linear-gradient(180deg, var(--navy-deep) 0%, #00142e 100%);
+    color:var(--text-primary);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{display:block;max-width:100%;}
+  ::selection{background:var(--gold-dim); color:#fff;}
+  h1,h2,h3,h4,blockquote{font-family:var(--font-display); font-weight:600; letter-spacing:-0.01em;}
+  .container{max-width:1080px; margin:0 auto; padding:0 24px;}
+  section{position:relative; padding:100px 0;}
+  @media (max-width:768px){ section{padding:68px 0;} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:18px;
+  }
+  .eyebrow::before{content:""; width:24px; height:1px; background:var(--gold);}
+  .section-title{
+    font-size:clamp(1.7rem, 3.4vw, 2.6rem);
+    color:var(--text-primary); margin-bottom:14px; max-width:720px;
+  }
+  .section-lede{
+    color:var(--text-secondary); font-size:1.02rem; max-width:640px;
+    margin-bottom:44px; font-weight:300;
+  }
+
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  .reveal.visible{opacity:1; transform:translateY(0);}
+  .reveal-delay-1{transition-delay:.08s;}
+  .reveal-delay-2{transition-delay:.16s;}
+  .reveal-delay-3{transition-delay:.24s;}
+  .reveal-delay-4{transition-delay:.32s;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none;}
+  }
+
+  #progress-bar{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--gold-soft), var(--gold));
+    z-index:999; box-shadow:0 0 12px var(--gold-glow); transition:width .08s linear;
+  }
+
+  #floating-nav{
+    position:fixed; right:26px; top:50%; transform:translateY(-50%); z-index:998;
+    display:flex; flex-direction:column; gap:16px; align-items:center;
+  }
+  .nav-dot{
+    position:relative; width:9px; height:9px; border-radius:50%;
+    background:rgba(255,255,255,0.22); border:none; cursor:pointer; padding:0;
+    transition:all .35s var(--ease);
+  }
+  .nav-dot::after{
+    content:attr(data-label);
+    position:absolute; right:20px; top:50%; transform:translateY(-50%);
+    font-size:0.68rem; color:var(--text-secondary); white-space:nowrap;
+    background:rgba(0,26,58,0.9); padding:4px 10px; border-radius:6px;
+    border:1px solid var(--border-soft); opacity:0; pointer-events:none;
+    transition:opacity .25s var(--ease);
+  }
+  .nav-dot:hover::after{opacity:1;}
+  .nav-dot.active{
+    background:var(--gold); width:9px; height:26px; border-radius:5px;
+    box-shadow:0 0 10px var(--gold-glow);
+  }
+  @media (max-width:900px){ #floating-nav{display:none;} }
+
+  /* HERO */
+  #hero{
+    min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding-top:130px; padding-bottom:70px;
+  }
+  .hero-mark{
+    font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:26px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero-mark .dot{width:4px;height:4px;border-radius:50%;background:var(--gold);}
+  .hero h1{font-size:clamp(2.2rem, 6vw, 4.3rem); line-height:1.07; max-width:940px; color:#fff;}
+  .hero h1 em{font-style:italic; color:var(--gold);}
+  .hero-sub{margin-top:24px; max-width:560px; color:var(--text-secondary); font-size:1.06rem; font-weight:300;}
+
+  .hero-visual{position:relative; width:min(300px,74vw); height:210px; margin:38px auto 4px;}
+  .hero-visual::before{
+    content:""; position:absolute; inset:-46px;
+    background:radial-gradient(circle, var(--gold-glow), transparent 68%);
+    filter:blur(6px); z-index:0;
+  }
+  .hero-visual svg{position:relative; z-index:1; width:100%; height:100%;}
+
+  .idea-central{
+    margin-top:26px; max-width:660px; padding:32px 36px; border-radius:18px;
+    background:var(--navy-card); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--border-soft); box-shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+  .idea-central p{
+    font-family:var(--font-display); font-style:italic;
+    font-size:clamp(1.12rem,2.3vw,1.45rem); color:var(--text-primary); line-height:1.5;
+  }
+  .idea-central .tag{
+    display:block; margin-top:16px; font-family:var(--font-body); font-style:normal;
+    font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold);
+  }
+  .scroll-cue{
+    margin-top:54px; display:flex; flex-direction:column; align-items:center; gap:10px;
+    color:var(--text-muted); font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .scroll-cue svg{animation:bob 2s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* JOURNEY */
+  #journey{padding:36px 0 60px;}
+  .journey-panel{
+    position:relative; border:1px solid var(--border-soft); background:var(--navy-card);
+    border-radius:18px; padding:24px 8px 18px 26px;
+  }
+  .journey-eyebrow{
+    display:block; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:18px;
+  }
+  .journey-panel::after{
+    content:""; position:absolute; top:44px; bottom:18px; right:0; width:36px; z-index:2;
+    pointer-events:none; background:linear-gradient(270deg, var(--navy-card), transparent);
+  }
+  .journey-track{
+    display:flex; align-items:center; overflow-x:auto;
+    padding-bottom:10px; padding-right:18px; scrollbar-width:none;
+  }
+  .journey-track::-webkit-scrollbar{display:none;}
+  .journey-step{
+    flex:0 0 auto; display:flex; align-items:center; gap:12px;
+    padding:0 22px; text-decoration:none; white-space:nowrap;
+  }
+  .journey-step:first-child{padding-left:0;}
+  .journey-step .num{
+    font-family:var(--font-display); font-size:0.85rem; color:var(--gold);
+    border:1px solid var(--border-gold); width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition:background .25s, color .25s;
+  }
+  .journey-step:hover .num{background:var(--gold); color:var(--navy-deep);}
+  .journey-step .label{font-size:0.82rem; color:var(--text-secondary); font-weight:500; transition:color .25s;}
+  .journey-step:hover .label{color:var(--gold-soft);}
+  .journey-line{flex:0 0 40px; height:1px; background:linear-gradient(90deg, var(--border-gold), transparent 80%);}
+
+  .card{
+    background:var(--navy-card); border:1px solid var(--border-soft); border-radius:16px; padding:28px;
+    transition:transform .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
+  }
+  .card:hover{background:var(--navy-card-hover); border-color:var(--border-gold);}
+
+  /* PREGUNTAS */
+  .q-list{display:flex; flex-direction:column;}
+  .q-item{
+    display:flex; align-items:center; gap:24px; padding:24px 28px;
+    border-top:1px solid var(--border-soft);
+    transition:padding-left .35s var(--ease), background .35s var(--ease);
+  }
+  .q-list .q-item:last-child{border-bottom:1px solid var(--border-soft);}
+  .q-item:hover{padding-left:40px; background:linear-gradient(90deg, var(--gold-glow), transparent 60%);}
+  .q-item .q-num{font-family:var(--font-display); font-style:italic; color:var(--gold); font-size:1.1rem; width:34px; flex-shrink:0;}
+  .q-item p{font-size:1.05rem; color:var(--text-primary);}
+
+  /* GRID DISFRACES */
+  .grid-4{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  @media (max-width:720px){ .grid-4{grid-template-columns:1fr;} }
+  .root-card .icon{
+    width:42px; height:42px; border-radius:12px;
+    background:rgba(255,189,89,0.09); border:1px solid var(--border-gold);
+    display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+  }
+  .root-card .icon svg{width:21px; height:21px; stroke:var(--gold); fill:none; stroke-width:1.5;}
+  .root-card h3{font-size:1.1rem; color:var(--text-primary); margin-bottom:8px;}
+  .root-card p.said{color:var(--gold-soft); font-size:0.95rem; font-weight:400; font-style:italic; margin-bottom:14px;}
+  .root-card p.explain{color:var(--text-secondary); font-size:0.9rem; font-weight:300; line-height:1.6; margin-bottom:16px;}
+  .root-card .fix{
+    font-size:0.9rem; color:var(--gold-soft); padding-top:14px;
+    border-top:1px dashed var(--border-soft);
+  }
+  .root-card .fix b{color:var(--gold); font-weight:600;}
+
+  /* DATOS PUNTUALES */
+  #cerebro{
+    background:linear-gradient(180deg, rgba(0,10,25,0.4), rgba(0,10,25,0.75));
+    border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft);
+  }
+  .fact-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-soft); border:1px solid var(--border-soft); border-radius:16px; overflow:hidden;}
+  @media (max-width:860px){ .fact-grid{grid-template-columns:1fr;} }
+  .fact{background:var(--navy-deep); padding:30px 26px;}
+  .fact .headline{
+    font-family:var(--font-display); font-size:1.15rem; color:var(--gold); margin-bottom:12px; line-height:1.35;
+  }
+  .fact p{font-size:0.92rem; color:var(--text-secondary); font-weight:300; line-height:1.6;}
+  .fact p + p{margin-top:12px;}
+  .fact p b{color:var(--text-primary); font-weight:600;}
+
+  /* VISUAL BALANCÍN */
+  #visual{padding-top:100px; padding-bottom:110px;}
+  .balance-wrap{display:flex; flex-direction:column; align-items:center;}
+  .balance{
+    position:relative; width:min(560px,92vw); height:200px; margin-bottom:26px;
+  }
+  .bar{
+    position:absolute; left:50%; top:80px; width:78%; height:3px;
+    background:linear-gradient(90deg, var(--gold), var(--navy-light));
+    transform:translateX(-50%) rotate(-9deg); border-radius:3px;
+    box-shadow:0 0 16px var(--gold-glow);
+  }
+  .pivot{
+    position:absolute; left:50%; top:83px; transform:translateX(-50%);
+    width:0; height:0; border-left:16px solid transparent; border-right:16px solid transparent;
+    border-top:44px solid rgba(255,255,255,0.12);
+  }
+  .side{
+    position:absolute; width:150px; text-align:center;
+  }
+  .side .cap{font-family:var(--font-display); font-style:italic; font-size:1.05rem;}
+  .side .sub{font-size:0.76rem; color:var(--text-muted); margin-top:6px; font-weight:300;}
+  .side.up{left:6%; top:8px;}
+  .side.up .cap{color:var(--gold);}
+  .side.down{right:6%; top:112px;}
+  .side.down .cap{color:var(--text-secondary);}
+  @media (max-width:620px){
+    .balance{height:250px;}
+    .side{width:130px;}
+    .side.up{left:0; top:0;}
+    .side.down{right:0; top:150px;}
+  }
+  .balance-caption{max-width:520px; text-align:center; color:var(--text-secondary); font-size:0.95rem; font-weight:300;}
+
+  /* SEÑALES / CELULAR */
+  .signal-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--border-soft); border:1px solid var(--border-soft);
+    border-radius:16px; overflow:hidden;
+  }
+  @media (max-width:720px){ .signal-grid{grid-template-columns:1fr;} }
+  .signal-card{background:var(--navy-deep); padding:30px 26px; position:relative; transition:background .3s;}
+  .signal-card:hover{background:rgba(255,189,89,0.04);}
+  .signal-card .ghost-num{
+    position:absolute; top:12px; right:20px; font-family:var(--font-display);
+    font-size:2.5rem; color:rgba(255,255,255,0.05); font-weight:700;
+  }
+  .signal-card h3{font-size:1.02rem; color:var(--text-primary); margin-bottom:8px; position:relative; z-index:1;}
+  .signal-card p{font-size:0.9rem; color:var(--text-secondary); font-weight:300; line-height:1.62; position:relative; z-index:1;}
+
+  /* BÍBLICO */
+  #fundamento{
+    background:linear-gradient(180deg, rgba(0,10,25,0.4), rgba(0,10,25,0.75));
+    border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft);
+  }
+  .verse-block{text-align:center; max-width:760px; margin:0 auto 50px; padding:40px 24px;}
+  .verse-block svg.quote-mark{width:32px; height:32px; margin:0 auto 22px; stroke:var(--gold); fill:none; opacity:0.7;}
+  .verse-block blockquote{font-size:clamp(1.25rem,2.8vw,1.8rem); font-style:italic; color:var(--text-primary); line-height:1.5;}
+  .verse-block cite{
+    display:block; margin-top:20px; font-family:var(--font-body); font-style:normal;
+    color:var(--gold); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .verse-story{
+    max-width:700px; margin:0 auto 48px; text-align:center;
+    color:var(--text-secondary); font-size:0.98rem; font-weight:300; line-height:1.7;
+  }
+  .verse-story b{color:var(--gold-soft); font-weight:600;}
+  .implication-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media (max-width:820px){ .implication-grid{grid-template-columns:1fr;} }
+  .implication-card{padding:24px 22px; border-radius:14px; background:rgba(255,255,255,0.03); border-left:2px solid var(--gold);}
+  .implication-card p{font-size:0.92rem; color:var(--text-secondary); font-weight:300; line-height:1.55;}
+
+  /* TIMELINE */
+  .timeline{position:relative; padding-left:52px;}
+  .timeline::before{content:""; position:absolute; left:17px; top:6px; bottom:6px; width:1px; background:linear-gradient(180deg, var(--gold), transparent 95%);}
+  .timeline-step{position:relative; padding-bottom:48px;}
+  .timeline-step:last-child{padding-bottom:0;}
+  .timeline-step .node{
+    position:absolute; left:-52px; top:2px; width:36px; height:36px; border-radius:50%;
+    background:var(--navy-deep); border:1px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); color:var(--gold); font-size:0.95rem;
+  }
+  .timeline-step h3{font-size:1.18rem; margin-bottom:8px; color:var(--text-primary);}
+  .timeline-step p.desc{color:var(--text-secondary); font-size:0.94rem; font-weight:300; margin-bottom:14px; max-width:600px;}
+  .exercise-box{
+    background:var(--navy-card); border:1px solid var(--border-soft); border-left:2px solid var(--gold);
+    border-radius:10px; padding:15px 20px; font-size:0.89rem; color:var(--gold-soft); max-width:600px;
+  }
+  .exercise-box b{color:var(--gold); font-weight:600;}
+
+  /* WORKBOOK */
+  #workbook{background:rgba(255,255,255,0.015); border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft);}
+  .workbook-flow{display:flex; align-items:stretch;}
+  @media (max-width:900px){ .workbook-flow{flex-direction:column;} }
+  .wb-field{
+    flex:1; display:flex; flex-direction:column; background:var(--navy-card);
+    border:1px solid var(--border-soft); border-radius:14px; padding:20px;
+  }
+  .wb-field label{font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; font-weight:600;}
+  .wb-field textarea{
+    resize:none; overflow:hidden; background:transparent; border:none; outline:none;
+    color:var(--text-primary); font-family:var(--font-body); font-size:0.93rem; line-height:1.55; min-height:88px;
+  }
+  .wb-field textarea::placeholder{color:var(--text-muted);}
+  .wb-arrow{flex:0 0 44px; display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:1.4rem;}
+  @media (max-width:900px){ .wb-arrow{transform:rotate(90deg); flex:0 0 40px;} }
+
+  /* REFLEXIÓN */
+  .reflexion-grid{display:grid; grid-template-columns:1fr 1fr; gap:46px;}
+  @media (max-width:820px){ .reflexion-grid{grid-template-columns:1fr; gap:34px;} }
+  .option-item{
+    width:100%; text-align:left; display:flex; align-items:center; gap:14px;
+    background:transparent; border:1px solid var(--border-soft); border-radius:12px;
+    padding:16px 18px; margin-bottom:12px; color:var(--text-secondary);
+    font-family:var(--font-body); font-size:0.93rem; cursor:pointer; transition:all .3s var(--ease);
+  }
+  .option-item .chk{
+    flex-shrink:0; width:18px; height:18px; border-radius:5px; border:1px solid var(--border-gold);
+    display:flex; align-items:center; justify-content:center; transition:all .3s var(--ease);
+  }
+  .option-item .chk svg{width:11px; height:11px; opacity:0; transition:opacity .2s; stroke:var(--navy-deep); stroke-width:3;}
+  .option-item.active{border-color:var(--gold); color:var(--text-primary); background:rgba(255,189,89,0.05);}
+  .option-item.active .chk{background:var(--gold);}
+  .option-item.active .chk svg{opacity:1;}
+  .deep-q{padding:20px 24px; margin-bottom:14px; border-radius:12px; background:var(--navy-card); border:1px solid var(--border-soft);}
+  .deep-q p{font-family:var(--font-display); font-style:italic; font-size:1.03rem; color:var(--text-primary);}
+
+  /* DESAFÍOS */
+  .challenge-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  @media (max-width:960px){ .challenge-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .challenge-grid{grid-template-columns:1fr;} }
+  .challenge-card{background:var(--navy-card); border:1px solid var(--border-soft); border-radius:16px; padding:24px 22px; display:flex; flex-direction:column;}
+  .challenge-card .week{font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; font-weight:600;}
+  .challenge-card h3{font-size:1rem; color:var(--text-primary); margin-bottom:10px;}
+  .challenge-card p{font-size:0.87rem; color:var(--text-secondary); font-weight:300; flex-grow:1;}
+
+  /* FRASES */
+  #frases{text-align:center;}
+  .phrase{font-family:var(--font-display); font-style:italic; font-size:clamp(1.45rem,4.2vw,2.8rem); line-height:1.35; max-width:900px; margin:0 auto 52px;}
+  .phrase:last-child{margin-bottom:0;}
+  .phrase.white{color:var(--text-primary);}
+  .phrase.gold{color:var(--gold);}
+
+  /* ORACIÓN */
+  #oracion{text-align:center; border-top:2px solid var(--gold); background:linear-gradient(180deg, rgba(255,189,89,0.05), transparent 60%);}
+  #oracion .eyebrow{justify-content:center;}
+  #oracion .eyebrow::before{display:none;}
+  #oracion p.prayer{
+    max-width:620px; margin:0 auto; font-family:var(--font-display); font-style:italic;
+    font-size:clamp(1.12rem,2.5vw,1.45rem); color:var(--text-primary); line-height:1.7;
+  }
+  #oracion .amen{margin-top:24px; color:var(--gold); font-size:0.82rem; letter-spacing:0.14em; text-transform:uppercase;}
+
+  /* DESCARGA */
+  #descarga{
+    background:linear-gradient(135deg, var(--gold-soft), var(--gold)); color:var(--navy-deep);
+    border-radius:24px; max-width:1080px; margin:0 auto; padding:52px 40px; text-align:center;
+  }
+  #descarga h2{color:var(--navy-deep); font-size:clamp(1.35rem,2.5vw,1.95rem); margin-bottom:12px;}
+  #descarga p{color:rgba(0,26,58,0.75); margin-bottom:28px; max-width:480px; margin-left:auto; margin-right:auto;}
+  .btn-navy{
+    background:var(--navy-deep); color:#fff; border:none; padding:16px 34px; border-radius:10px;
+    font-family:var(--font-body); font-weight:600; font-size:0.94rem; cursor:pointer;
+    transition:transform .3s var(--ease), background .3s; display:inline-flex; align-items:center; gap:10px;
+  }
+  .btn-navy:hover{transform:translateY(-2px); background:#00274c;}
+  .btn-navy svg{width:16px; height:16px; stroke:#fff; fill:none; stroke-width:2;}
+
+  footer{text-align:center; padding:66px 24px 48px; border-top:1px solid var(--border-soft);}
+  footer .fmark{font-family:var(--font-display); font-style:italic; font-size:1.3rem; color:var(--text-primary); margin-bottom:6px;}
+  footer .fmark span{color:var(--gold);}
+  footer p{color:var(--text-muted); font-size:0.8rem;}
+
+  @media print{
+    #floating-nav, #progress-bar, .scroll-cue, #journey{display:none !important;}
+    body{background:var(--navy-deep) !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    section{padding:34px 0; page-break-inside:avoid;}
+    .btn-navy{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav id="floating-nav" aria-label="Navegación de la guía">
+  <button class="nav-dot" data-target="hero" data-label="Inicio" aria-label="Ir a Inicio"></button>
+  <button class="nav-dot" data-target="preguntas" data-label="Preguntas" aria-label="Ir a Preguntas"></button>
+  <button class="nav-dot" data-target="disfraces" data-label="Disfraces" aria-label="Ir a Disfraces"></button>
+  <button class="nav-dot" data-target="cerebro" data-label="El cerebro" aria-label="Ir a El cerebro"></button>
+  <button class="nav-dot" data-target="celular" data-label="El celular" aria-label="Ir a El celular"></button>
+  <button class="nav-dot" data-target="fundamento" data-label="Fundamento" aria-label="Ir a Fundamento"></button>
+  <button class="nav-dot" data-target="plan" data-label="Plan" aria-label="Ir a Plan"></button>
+  <button class="nav-dot" data-target="workbook" data-label="Workbook" aria-label="Ir a Workbook"></button>
+  <button class="nav-dot" data-target="reflexion" data-label="Reflexión" aria-label="Ir a Reflexión"></button>
+  <button class="nav-dot" data-target="desafios" data-label="Desafíos" aria-label="Ir a Desafíos"></button>
+  <button class="nav-dot" data-target="oracion" data-label="Oración" aria-label="Ir a Oración"></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container" style="display:flex; flex-direction:column; align-items:center;">
+    <div class="hero-mark reveal"><span class="dot"></span> MI SOLEDAD Y DIOS · GUÍA DE LA COMUNIDAD</div>
+    <h1 class="reveal reveal-delay-1">Procrastinación y celular:<br><em>dos males silenciosos</em></h1>
+    <p class="hero-sub reveal reveal-delay-2">Por qué posponemos lo que más importa — y qué papel juega esa pantalla que siempre llevamos encima.</p>
+
+    <figure class="hero-visual reveal reveal-delay-3" aria-hidden="true">
+      <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g transform="translate(80,10)">
+          <path d="M40,190 C38,155 36,120 40,92 C43,64 55,40 80,30 C90,27 98,25 106,27
+                   C128,31 140,50 140,76 C139,90 150,96 158,109 C153,117 142,120 139,128
+                   C136,136 140,141 136,148 C132,156 118,161 110,174 C103,184 99,194 98,206
+                   C120,214 140,229 155,254 L155,300 L5,300 L5,244 C10,224 20,195 40,190 Z"
+                fill="var(--navy-light)" opacity="0.95"/>
+        </g>
+        <g transform="translate(232,150) rotate(-12)">
+          <rect x="0" y="0" width="52" height="90" rx="8" fill="none" stroke="var(--gold)" stroke-width="2" filter="url(#glow)"/>
+          <rect x="6" y="10" width="40" height="66" rx="3" fill="var(--gold)" opacity="0.22"/>
+        </g>
+        <g opacity="0.85">
+          <path d="M300,60 L318,60 L306,88 L322,88 L296,128 L302,98 L288,98 Z" fill="none" stroke="var(--gold)" stroke-width="1.4"/>
+        </g>
+      </svg>
+    </figure>
+
+    <div class="idea-central reveal reveal-delay-4">
+      <p>&ldquo;No procrastinamos porque somos flojos. Procrastinamos porque hay algo que no queremos sentir — y el celular nos da dónde escondernos.&rdquo;</p>
+      <span class="tag">Idea central</span>
+    </div>
+
+    <div class="scroll-cue reveal reveal-delay-4">
+      Desliza para comenzar
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="container">
+    <div class="journey-panel reveal">
+      <span class="journey-eyebrow">El recorrido de esta guía</span>
+      <div class="journey-track">
+        <a href="#preguntas" class="journey-step"><span class="num">01</span><span class="label">Preguntas</span></a>
+        <span class="journey-line"></span>
+        <a href="#disfraces" class="journey-step"><span class="num">02</span><span class="label">Los 4 disfraces</span></a>
+        <span class="journey-line"></span>
+        <a href="#cerebro" class="journey-step"><span class="num">03</span><span class="label">Tu cerebro</span></a>
+        <span class="journey-line"></span>
+        <a href="#celular" class="journey-step"><span class="num">04</span><span class="label">El celular</span></a>
+        <span class="journey-line"></span>
+        <a href="#fundamento" class="journey-step"><span class="num">05</span><span class="label">Fundamento</span></a>
+        <span class="journey-line"></span>
+        <a href="#plan" class="journey-step"><span class="num">06</span><span class="label">El plan</span></a>
+        <span class="journey-line"></span>
+        <a href="#workbook" class="journey-step"><span class="num">07</span><span class="label">Workbook</span></a>
+        <span class="journey-line"></span>
+        <a href="#desafios" class="journey-step"><span class="num">08</span><span class="label">Desafíos</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS -->
+<section id="preguntas">
+  <div class="container">
+    <div class="eyebrow reveal">Antes de seguir</div>
+    <h2 class="section-title reveal">Cuatro preguntas honestas</h2>
+    <p class="section-lede reveal">Léelas despacio. Nota cuál te incomoda más — esa es la tuya.</p>
+    <div class="q-list reveal">
+      <div class="q-item"><span class="q-num">01</span><p>¿Qué llevas meses diciendo que vas a hacer y no haces?</p></div>
+      <div class="q-item"><span class="q-num">02</span><p>¿Qué sientes justo antes de abrir el teléfono en vez de empezar?</p></div>
+      <div class="q-item"><span class="q-num">03</span><p>¿Cuánto de tu día ya está decidido por lo primero que miras al despertar?</p></div>
+      <div class="q-item"><span class="q-num">04</span><p>Si Dios te pidiera cuentas hoy de lo que te dio, ¿qué le mostrarías?</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DISFRACES -->
+<section id="disfraces">
+  <div class="container">
+    <div class="eyebrow reveal">El diagnóstico</div>
+    <h2 class="section-title reveal">Los 4 disfraces de la procrastinación</h2>
+    <p class="section-lede reveal">Postergar casi nunca es pereza. Cuando piensas en la tarea, sientes algo incómodo — y postergarla te quita esa incomodidad al instante. Ese alivio inmediato es lo que tu cerebro aprende a repetir. Identifica cuál de las cuatro es la tuya.</p>
+    <div class="grid-4">
+      <div class="card root-card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 5-3.5 8.5-7 9.5C8.5 20.5 5 17 5 12V6l7-3z"/></svg></div>
+        <h3>Miedo al fracaso</h3>
+        <p class="said">&ldquo;Si no empiezo, no me pueden medir.&rdquo;</p>
+        <p class="explain">Mientras la tarea siga sin empezar, sigue siendo potencial. En el momento en que la haces, se vuelve algo real que puede salir mal. Postergar protege tu imagen de ti mismo.</p>
+        <p class="fix"><b>Qué hacer:</b> baja la apuesta. Haz un borrador que nadie va a ver, o dile a alguien &ldquo;esto es solo un intento&rdquo;. Cuando el resultado no define tu valor, empezar deja de dar miedo.</p>
+      </div>
+      <div class="card root-card reveal reveal-delay-1">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.6 6.3 6.9.6-5.2 4.5 1.6 6.6L12 16.5 6.1 20l1.6-6.6-5.2-4.5 6.9-.6z"/></svg></div>
+        <h3>Perfeccionismo</h3>
+        <p class="said">&ldquo;Si no sale perfecto, mejor no sale.&rdquo;</p>
+        <p class="explain">Suena a excelencia, pero funciona como freno. Esperas el momento ideal, la idea completa, las condiciones perfectas — y ese momento no llega nunca, porque en realidad no lo estás esperando: lo estás usando de excusa.</p>
+        <p class="fix"><b>Qué hacer:</b> ponle límite de tiempo, no de calidad. 25 minutos en el reloj, y lo que salga se queda. Es más fácil mejorar algo hecho que empezar algo perfecto.</p>
+      </div>
+      <div class="card root-card reveal reveal-delay-2">
+        <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 015 .5c0 1.7-2.5 2-2.5 3.5M12 17h.01"/></svg></div>
+        <h3>Ambigüedad</h3>
+        <p class="said">&ldquo;No sé por dónde empezar.&rdquo;</p>
+        <p class="explain">Este es el más común y el que menos culpa merece. Cuando la tarea es grande y vaga —&ldquo;arreglar mis finanzas&rdquo;, &ldquo;lanzar el proyecto&rdquo;— el cerebro no encuentra dónde agarrarla, y ante la confusión elige lo que sí tiene instrucciones claras: el teléfono.</p>
+        <p class="fix"><b>Qué hacer:</b> escribe el primer paso físico, no la tarea. No &ldquo;hacer el video&rdquo; — &ldquo;abrir la cámara&rdquo;. Si el paso no cabe en un verbo concreto, todavía es muy grande.</p>
+      </div>
+      <div class="card root-card reveal reveal-delay-3">
+        <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5"/><circle cx="12" cy="15" r="3"/></svg></div>
+        <h3>Falta de sentido</h3>
+        <p class="said">&ldquo;No veo para qué sirve esto.&rdquo;</p>
+        <p class="explain">No es que seas indisciplinado. Es que tu cerebro no gasta energía en algo que no conecta con nada que te importe. Sin un porqué, la voluntad se agota rapidísimo.</p>
+        <p class="fix"><b>Qué hacer:</b> conéctalo a un <i>para quién</i>, no a un <i>para qué</i>. ¿A quién le cambia algo que esto exista? Tu familia, un cliente, la persona que fuiste hace cinco años.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CEREBRO -->
+<section id="cerebro">
+  <div class="container">
+    <div class="eyebrow reveal">Tu cerebro</div>
+    <h2 class="section-title reveal">Por qué pierdes la pelea</h2>
+    <p class="section-lede reveal">Esto no es falta de carácter. Es cómo funciona tu cerebro por dentro — y entenderlo cambia la forma en que peleas la batalla.</p>
+    <div class="fact-grid reveal">
+      <div class="fact">
+        <p class="headline">La dopamina no es placer. Es deseo.</p>
+        <p>Casi todos creen que la dopamina es la sustancia del disfrute. No lo es. Se dispara cuando <i>anticipas</i> algo, no cuando lo tienes.</p>
+        <p>Piénsalo así: el pico no está en ver el video, está en el segundo antes de deslizar, cuando todavía no sabes qué va a salir. Por eso puedes pasar dos horas en el teléfono y levantarte sin recordar ni disfrutar nada — se activó el sistema de buscar, nunca el de estar satisfecho.</p>
+      </div>
+      <div class="fact">
+        <p class="headline">Dos partes de ti peleando.</p>
+        <p>Una parte quiere la recompensa <b>ahora</b>. Otra parte planifica, mide consecuencias y dice &ldquo;esto puede esperar&rdquo;.</p>
+        <p>La primera es más antigua, más rápida y no pide permiso — es la que te mantuvo vivo cuando el peligro era inmediato. Cuando postergas no es que la parte racional esté apagada; es que llegó tarde. La otra ya agarró el teléfono.</p>
+      </div>
+      <div class="fact">
+        <p class="headline">Todo pico se paga con un valle.</p>
+        <p>Placer y dolor usan el mismo mecanismo en el cerebro, y ese mecanismo busca equilibrio. Cada subida artificial se compensa con una bajada después.</p>
+        <p>Por eso te acuestas a &ldquo;descansar&rdquo; con el teléfono y te levantas más cansado y con menos ganas que antes. No fue descanso — fue un préstamo, y el pago viene con intereses.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL BALANCÍN -->
+<section id="visual">
+  <div class="container">
+    <div class="balance-wrap">
+      <div class="balance reveal" aria-hidden="true">
+        <div class="side up"><div class="cap">El pico</div><div class="sub">el scroll, la notificación, el video</div></div>
+        <div class="bar"></div>
+        <div class="pivot"></div>
+        <div class="side down"><div class="cap">El valle</div><div class="sub">el vacío, el cansancio, menos ganas</div></div>
+      </div>
+      <p class="balance-caption reveal">Mientras más alto el pico, más profundo el valle. Con el tiempo lo normal —una conversación, un libro, el trabajo real— se siente aburrido. No porque cambió. Porque tu umbral subió.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CELULAR -->
+<section id="celular">
+  <div class="container">
+    <div class="eyebrow reveal">El celular</div>
+    <h2 class="section-title reveal">No causa el problema. Lo hace perfecto.</h2>
+    <p class="section-lede reveal">Postergar existe desde siempre. Lo nuevo es que antes, cuando evitabas algo, terminabas aburrido — y ese aburrimiento eventualmente te empujaba de vuelta al trabajo. Hoy el escape nunca se acaba, así que nada te empuja de vuelta. Estas son las seis razones de por qué es tan difícil soltarlo.</p>
+    <div class="signal-grid reveal">
+      <div class="signal-card"><span class="ghost-num">01</span>
+        <h3>No sabes qué va a salir</h3>
+        <p>Es el mecanismo exacto de la máquina tragamonedas. Si supieras que el próximo video va a ser aburrido, no deslizarías. Lo que engancha no es el contenido — es la incertidumbre. Y una recompensa impredecible engancha muchísimo más que una segura.</p>
+      </div>
+      <div class="signal-card"><span class="ghost-num">02</span>
+        <h3>Nunca te dice &ldquo;ya terminaste&rdquo;</h3>
+        <p>Un libro tiene última página. Un programa termina. El feed no: siempre hay una publicación más. Sin un punto final natural, la única forma de parar es que tú decidas — y decidir cansa.</p>
+      </div>
+      <div class="signal-card"><span class="ghost-num">03</span>
+        <h3>Basta con que esté ahí</h3>
+        <p>Un estudio encontró que tener el celular sobre la mesa —apagado y boca abajo— ya reduce tu capacidad mental disponible. Ni siquiera tienes que usarlo: parte de tu cerebro está ocupada resistiendo la tentación, y esa parte ya no está trabajando contigo.</p>
+      </div>
+      <div class="signal-card"><span class="ghost-num">04</span>
+        <h3>No vuelves completo</h3>
+        <p>Se le llama residuo de atención: cada vez que interrumpes algo para revisar el teléfono, una parte de tu mente se queda enganchada allá. Vuelves a la tarea, sí, pero con menos capacidad — y por eso te toma tanto retomar el hilo.</p>
+      </div>
+      <div class="signal-card"><span class="ghost-num">05</span>
+        <h3>No es una pelea justa</h3>
+        <p>Tu cerebro se formó en un mundo donde toda recompensa costaba esfuerzo y tiempo. El teléfono ofrece placer infinito, inmediato y gratis, compitiendo contra una tarea cuyo beneficio llegará en tres semanas. Perder esa pelea no te hace débil.</p>
+      </div>
+      <div class="signal-card"><span class="ghost-num">06</span>
+        <h3>Ya no existe el vacío</h3>
+        <p>La fila del banco, el trayecto, los cinco minutos antes de dormir — todos esos huecos están llenos ahora. Y el vacío no era tiempo perdido: era donde aparecían las ideas, donde procesabas el día, donde escuchabas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDAMENTO -->
+<section id="fundamento">
+  <div class="container">
+    <div class="eyebrow reveal">Fundamento bíblico</div>
+    <h2 class="section-title reveal">El siervo no fue flojo. Tuvo miedo.</h2>
+
+    <div class="verse-block reveal">
+      <svg class="quote-mark" viewBox="0 0 24 24"><path d="M7 8c-2.5 0-4 2-4 4.5S4.5 17 7 17s4-2 4-4.5C11 9 9.5 8 7 8zm10 0c-2.5 0-4 2-4 4.5S14.5 17 17 17s4-2 4-4.5C21 9 19.5 8 17 8z"/></svg>
+      <blockquote>&ldquo;Tuve miedo, y fui y escondí tu talento en la tierra.&rdquo;</blockquote>
+      <cite>Mateo 25:25</cite>
+    </div>
+
+    <p class="verse-story reveal">En la parábola, el amo reparte talentos entre tres siervos. Dos los ponen a trabajar. El tercero cava un hoyo y esconde el suyo. Y cuando le piden cuentas, fíjate en su explicación: no dijo &ldquo;me dio flojera&rdquo; ni &ldquo;se me olvidó&rdquo;. Dijo <b>tuve miedo</b>. Su razonamiento hasta suena prudente — no perder lo que le dieron. Pero Dios no evaluó su lógica; evaluó que no se movió.</p>
+
+    <div class="implication-grid">
+      <div class="implication-card reveal">
+        <p><b>Lo que esto significa hoy.</b> Enterrar el talento se ve responsable por fuera. Esperar el momento correcto, no arriesgar, no exponerse. Pero no hacer nada también es una decisión — solo que una que se justifica más fácil.</p>
+      </div>
+      <div class="implication-card reveal reveal-delay-1">
+        <p><b>1 Corintios 6:12</b> — &ldquo;todo me es lícito, pero no me dejaré dominar por nada&rdquo;. Pablo no hablaba de teléfonos, pero describía el patrón exacto: algo que empieza como una elección tuya y termina siendo quien manda. La pregunta no es si el celular es malo. Es quién manda a quién.</p>
+      </div>
+      <div class="implication-card reveal reveal-delay-2">
+        <p><b>Mateo 6:21</b> — donde esté tu tesoro, allí estará tu corazón. Tu atención es una forma de adoración: lo que miras primero cada mañana es, en la práctica, lo que gobierna tu día. Y Jesús mismo buscaba lugares solitarios (Marcos 6:31) — el silencio no era lujo para Él, era necesidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section id="plan">
+  <div class="container">
+    <div class="eyebrow reveal">Aplicación</div>
+    <h2 class="section-title reveal">Qué hacer esta semana</h2>
+    <p class="section-lede reveal">Seis movimientos concretos. No necesitas los seis — necesitas empezar por uno.</p>
+
+    <div class="timeline reveal">
+      <div class="timeline-step">
+        <div class="node">1</div>
+        <h3>Nombra la emoción antes de empezar</h3>
+        <p class="desc">Si postergar es escapar de un sentimiento, el primer paso es saber de cuál. Mientras la incomodidad no tiene nombre, se siente enorme y confusa. Cuando la nombras, se vuelve algo concreto — y lo concreto se puede enfrentar. Además te muestra el problema real: a veces no es la tarea, es el mensaje que tienes que mandar antes.</p>
+        <div class="exercise-box"><b>Hazlo:</b> antes de la tarea, completa en voz alta: &ldquo;Estoy evitando esto porque siento...&rdquo; No lo pienses — dilo.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="node">2</div>
+        <h3>Reduce al primer paso ridículo</h3>
+        <p class="desc">El cerebro no se resiste a las tareas, se resiste a las tareas <i>grandes y vagas</i>. &ldquo;Escribir el reporte&rdquo; activa la alarma; &ldquo;abrir el documento&rdquo; no. Y aquí está el truco: casi nunca te detienes después del primer paso. La resistencia está toda concentrada en el arranque — una vez en movimiento, seguir cuesta mucho menos.</p>
+        <div class="exercise-box"><b>Hazlo:</b> escribe la tarea que estás evitando, y debajo un primer paso que tome menos de 2 minutos. Si te da pereza ese paso, todavía es muy grande.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="node">3</div>
+        <h3>Gana por ambiente, no por voluntad</h3>
+        <p class="desc">La fuerza de voluntad se agota; el ambiente no. Si el teléfono está a tu lado, cada minuto tienes que volver a decidir no agarrarlo, y cada decisión gasta energía que necesitabas para trabajar. Si está en otro cuarto, decides una sola vez y ya. No es disciplina — es diseño.</p>
+        <div class="exercise-box"><b>Hazlo:</b> el celular en otro cuarto durante tu bloque de trabajo. No boca abajo. No en el bolsillo. En otro cuarto.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="node">4</div>
+        <h3>Protege las primeras horas</h3>
+        <p class="desc">Lo primero que miras al despertar le pone el ritmo a todo el día. Si empiezas con el feed, tu cerebro arranca con una dosis alta de estímulo — y todo lo que venga después se va a sentir lento y aburrido en comparación. Si empiezas con silencio y una tarea real, el resto del día tiene con qué competir.</p>
+        <div class="exercise-box"><b>Hazlo:</b> primera hora: oración, agua y la tarea #1. El teléfono espera. Si lo usas de despertador, cómprate un reloj.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="node">5</div>
+        <h3>Reintroduce el aburrimiento</h3>
+        <p class="desc">Suena raro pedir aburrimiento, pero es donde tu mente procesa lo que vivió, conecta ideas y escucha. Cuando llenas cada hueco con pantalla, nunca llegas a ese estado — y luego te preguntas por qué te sientes disperso y sin ideas. No es falta de creatividad; es falta de espacio.</p>
+        <div class="exercise-box"><b>Hazlo:</b> elige un hueco al día y déjalo vacío. Un trayecto sin audífonos. Una comida sin pantalla. Empieza con uno.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="node">6</div>
+        <h3>Perdónate por haber postergado</h3>
+        <p class="desc">Este es el más contraintuitivo, y quizá el más importante. Al castigarte, la tarea queda asociada a vergüenza — y la próxima vez que la veas, la incomodidad será mayor, así que la evitarás más. Los estudios lo confirman: quien se perdona por haber postergado, postergó menos la vez siguiente. La culpa no te mueve. Te hunde.</p>
+        <div class="exercise-box"><b>Hazlo:</b> di en voz alta: &ldquo;Perdí tiempo. Ya pasó. Empiezo ahora.&rdquo; Y empieza de inmediato — sin la frase, es solo consuelo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKBOOK -->
+<section id="workbook">
+  <div class="container">
+    <div class="eyebrow reveal">Workbook</div>
+    <h2 class="section-title reveal">Tu plan, en tus palabras</h2>
+    <p class="section-lede reveal">Cuatro campos. Nadie más los va a leer.</p>
+    <div class="workbook-flow reveal">
+      <div class="wb-field">
+        <label>Lo que estoy evitando</label>
+        <textarea placeholder="La tarea que llevas semanas posponiendo..." rows="4"></textarea>
+      </div>
+      <div class="wb-arrow">→</div>
+      <div class="wb-field">
+        <label>Lo que siento al pensarlo</label>
+        <textarea placeholder="Miedo, aburrimiento, vergüenza, ansiedad..." rows="4"></textarea>
+      </div>
+      <div class="wb-arrow">→</div>
+      <div class="wb-field">
+        <label>Mi primer paso de 2 minutos</label>
+        <textarea placeholder="Algo tan pequeño que sería ridículo no hacerlo..." rows="4"></textarea>
+      </div>
+      <div class="wb-arrow">→</div>
+      <div class="wb-field">
+        <label>Cuándo lo hago</label>
+        <textarea placeholder="Día y hora exacta. Sin 'pronto'..." rows="4"></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLEXIÓN -->
+<section id="reflexion">
+  <div class="container">
+    <div class="eyebrow reveal">Reflexión</div>
+    <h2 class="section-title reveal">Elige tu postura</h2>
+    <p class="section-lede reveal">No como promesa perfecta, sino como intención para esta semana.</p>
+    <div class="reflexion-grid">
+      <div class="reveal">
+        <button type="button" class="option-item" data-toggle>
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12l5 5L20 6"/></svg></span>
+          Elijo empezar mal antes que no empezar.
+        </button>
+        <button type="button" class="option-item" data-toggle>
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12l5 5L20 6"/></svg></span>
+          Elijo que el celular no gobierne mi primera hora.
+        </button>
+        <button type="button" class="option-item" data-toggle>
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12l5 5L20 6"/></svg></span>
+          Elijo el aburrimiento sobre el escape.
+        </button>
+        <button type="button" class="option-item" data-toggle>
+          <span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12l5 5L20 6"/></svg></span>
+          Elijo no enterrar lo que Dios me dio.
+        </button>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="deep-q"><p>¿Qué estoy evitando sentir cuando agarro el teléfono?</p></div>
+        <div class="deep-q"><p>¿Qué talento llevo enterrado por miedo a que no salga bien?</p></div>
+        <div class="deep-q"><p>Si mi atención es adoración, ¿a qué le he estado adorando?</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESAFÍOS -->
+<section id="desafios">
+  <div class="container">
+    <div class="eyebrow reveal">Desafíos semanales</div>
+    <h2 class="section-title reveal">Cuatro semanas, cuatro cambios</h2>
+    <p class="section-lede reveal">Una reflexión no rompe un patrón. La repetición sí.</p>
+    <div class="challenge-grid">
+      <div class="challenge-card reveal">
+        <span class="week">Semana 1</span>
+        <h3>La primera hora es tuya</h3>
+        <p>Nada de redes antes de trabajar. Empieza el día con oración y la tarea #1.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-1">
+        <span class="week">Semana 2</span>
+        <h3>Teléfono en otro cuarto</h3>
+        <p>Durante tu bloque principal de trabajo, el celular no está contigo. Ni en el bolsillo.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-2">
+        <span class="week">Semana 3</span>
+        <h3>Un vacío al día</h3>
+        <p>Un trayecto sin audífonos, una comida sin pantalla. Recupera el aburrimiento.</p>
+      </div>
+      <div class="challenge-card reveal reveal-delay-3">
+        <span class="week">Semana 4</span>
+        <h3>Desentierra un talento</h3>
+        <p>Esa cosa que llevas meses posponiendo por miedo. Da el primer paso esta semana.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRASES -->
+<section id="frases">
+  <div class="container">
+    <p class="phrase white reveal">No es pereza.<br>Es algo que no quieres sentir.</p>
+    <p class="phrase gold reveal reveal-delay-1">El perfeccionismo es miedo con corbata.</p>
+    <p class="phrase white reveal reveal-delay-2">Lo que llamamos falta de disciplina<br>muchas veces es solo falta de silencio.</p>
+    <p class="phrase gold reveal reveal-delay-3">El celular no te roba tiempo.<br>Te roba la capacidad de disfrutar lo que no brilla.</p>
+    <p class="phrase white reveal reveal-delay-4">El siervo no fue castigado por perder el talento.<br>Fue castigado por enterrarlo.</p>
+  </div>
+</section>
+
+<!-- ORACIÓN -->
+<section id="oracion">
+  <div class="container">
+    <div class="eyebrow reveal">Oración de cierre</div>
+    <p class="prayer reveal reveal-delay-1">Señor, perdóname por lo que he enterrado por miedo. Dame el valor de empezar antes de sentirme listo, y la fuerza de soltar lo que me distrae de lo que me diste. Que mi atención vuelva a ser tuya, y que mis primeras horas te pertenezcan.</p>
+    <p class="amen reveal reveal-delay-2">Amén</p>
+  </div>
+</section>
+
+<!-- DESCARGA -->
+<section style="padding-top:0;">
+  <div class="container">
+    <div id="descarga" class="reveal">
+      <h2>¿Quieres releer esto sin conexión?</h2>
+      <p>Guarda la guía como PDF y llévala contigo al workbook, a solas o en comunidad.</p>
+      <button class="btn-navy" onclick="window.print()" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Descargar guía en PDF
+      </button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fmark">Mi Soledad <span>y</span> Dios 🙏❤️</div>
+  <p>Guía interactiva de la comunidad — Nato Paredes</p>
+</footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var progressBar = document.getElementById('progress-bar');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrollTop = h.scrollTop || document.body.scrollTop;
+    var scrollHeight = h.scrollHeight - h.clientHeight;
+    progressBar.style.width = (scrollHeight > 0 ? (scrollTop/scrollHeight)*100 : 0) + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('visible'); io.unobserve(entry.target); }
+      });
+    }, {threshold:0.15, rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+  }
+
+  var navDots = document.querySelectorAll('.nav-dot');
+  navDots.forEach(function(dot){
+    dot.addEventListener('click', function(){
+      var t = document.getElementById(dot.getAttribute('data-target'));
+      if(t) t.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+    });
+  });
+
+  if('IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting) return;
+        var dot = document.querySelector('.nav-dot[data-target="'+entry.target.id+'"]');
+        if(!dot) return;
+        navDots.forEach(function(d){ d.classList.remove('active'); });
+        dot.classList.add('active');
+      });
+    }, {threshold:0.4});
+    navDots.forEach(function(dot){
+      var s = document.getElementById(dot.getAttribute('data-target'));
+      if(s) spy.observe(s);
+    });
+  }
+
+  document.querySelectorAll('.wb-field textarea').forEach(function(ta){
+    function resize(){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+    ta.addEventListener('input', resize);
+    resize();
+  });
+
+  document.querySelectorAll('.option-item[data-toggle]').forEach(function(btn){
+    btn.setAttribute('aria-pressed','false');
+    btn.addEventListener('click', function(){
+      var active = btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
